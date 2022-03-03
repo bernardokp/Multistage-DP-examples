@@ -1,0 +1,39 @@
+### Example taken from page 98 of by "Markov Decision Processes: Discrete stochastic Dynamic Programming", by Martin L. Putterman
+### 1994. The example is described in section 4.6.3 of the book:
+### min x_1^2 + ... + x_N^2 subjecto to x_1 + ... + x_n = M, x_i >=0, i=1,...,N. 
+### The optimal value is M^2/N, and the optimal solution is x_i = M/N, i=1,...,N, which can be shown by induction. 
+
+using SDDP
+using GLPK
+using Ipopt
+using Printf
+
+N = 3 # number of terms in the sum in the objective function
+M = 5 # total budget
+
+graph = SDDP.LinearGraph(N)
+function subproblem_builder(subproblem::Model, node::Int)
+    @variable(subproblem, 0 <= s <= M, SDDP.State, initial_value = M)
+    @variable(subproblem, x >= 0)
+    @constraint(subproblem, x <= s.in)
+    @constraint(subproblem, s.out == s.in - x)
+    if node == 1
+        @stageobjective(subproblem, x^2)
+    elseif node == 2
+        @stageobjective(subproblem, x^2)
+    else
+        @stageobjective(subproblem, s.in^2)
+    end
+    return subproblem
+end
+
+model = SDDP.PolicyGraph(
+    subproblem_builder,
+    graph;
+    sense = :Min,
+    lower_bound = 0.0,
+    optimizer = Ipopt.Optimizer
+)
+
+SDDP.train(model, iteration_limit = 10)
+@printf("Theoretical optimal value = %0.20f", M^2/N)
