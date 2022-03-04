@@ -17,12 +17,10 @@ function subproblem_builder(subproblem::Model, node::Int)
     @variable(subproblem, x >= 0)
     @constraint(subproblem, x <= s.in)
     @constraint(subproblem, s.out == s.in - x)
-    if node == 1
-        @stageobjective(subproblem, x^2)
-    elseif node == 2
-        @stageobjective(subproblem, x^2)
-    else
+    if node == N
         @stageobjective(subproblem, s.in^2)
+    else
+        @stageobjective(subproblem, x^2)
     end
     return subproblem
 end
