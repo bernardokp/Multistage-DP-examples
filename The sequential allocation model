@@ -1,5 +1,5 @@
-### Example taken from page 98 of by "Markov Decision Processes: Discrete stochastic Dynamic Programming", by Martin L. Putterman
-### 1994. The example is described in section 4.6.3 of the book:
+### Example taken from page 98 of "Markov Decision Processes: Discrete stochastic Dynamic Programming", by Martin L. Putterman, 1994. 
+### The example is described in section 4.6.3 of the book:
 ### min x_1^2 + ... + x_N^2 subject to to x_1 + ... + x_n = M, x_i >=0, i=1,...,N. 
 ### The optimal value is M^2/N, and the optimal solution is x_i = M/N, i=1,...,N, which can be shown by induction. 
 
